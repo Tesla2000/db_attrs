@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Any
 
-from db_class.src.JsonEncoder.JsonOperator import JSONOperator
+from ..JsonEncoder.JsonOperator import JSONOperator
 
 
 class Encoder(JSONOperator):

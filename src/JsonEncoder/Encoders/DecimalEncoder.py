@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Any
 
-from ..JsonEncoder.Encoder import Encoder
+from ...JsonEncoder.Encoder import Encoder
 
 
 class DecimalEncoder(Encoder):

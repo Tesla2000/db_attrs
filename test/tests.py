@@ -7,3 +7,6 @@ def test_imports():
         "ImplementingFromDict"
     ]
     assert __all__
+
+def test_serialize():
+    DbClass

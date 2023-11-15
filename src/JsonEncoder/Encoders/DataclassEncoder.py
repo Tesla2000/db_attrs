@@ -1,15 +1,15 @@
-from datetime import datetime
+import json
+from dataclasses import is_dataclass, asdict
 from typing import Any
-
-from ..Decoders.DatetimeDecoder import datetime_format
 from ...JsonEncoder.Encoder import Encoder
 
 
-class DatetimeEncoder(Encoder):
+class DataclassEncoder(Encoder):
     @staticmethod
     def is_valid(element: Any) -> bool:
-        return isinstance(element, datetime)
+        return is_dataclass(element)
 
     @staticmethod
-    def encode(element: datetime) -> str:
-        return element.strftime(datetime_format)
+    def encode(element) -> dict:
+        from ..DefaultJsonEncoder import DefaultJsonEncoder
+        return json.loads(json.dumps(asdict(element), cls=DefaultJsonEncoder))

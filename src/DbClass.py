@@ -2,10 +2,10 @@ import json
 import random
 from typing import Any
 
-from dataclasses import dataclass, field, asdict, fields
+from dataclasses import dataclass, field, fields
 
-from db_class.src.JsonEncoder import Decoder
-from db_class.src.JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
+from .JsonEncoder.Decoder import Decoder
+from .JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
 
 
 @dataclass
@@ -20,7 +20,7 @@ class DbClass:
                     setattr(self, field.name, decoder.decode(getattr(self, field.name)))
                     break
 
-    def get_firebase_representation(self) -> dict:
+    def get_db_representation(self) -> dict:
         return json.loads(
             json.dumps(
                 dict(
@@ -35,6 +35,3 @@ class DbClass:
                 cls=self.json_encoder,
             )
         )
-
-    def serialize(self) -> dict:
-        return json.loads(json.dumps(asdict(self), cls=self.json_encoder))

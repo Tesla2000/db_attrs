@@ -3,5 +3,5 @@ __all__ = [
     "ImplementingFromDict",
 ]
 
-from .DbClass import DbClass
-from .ImplementigFromDict import ImplementingFromDict
+from .src import DbClass
+from .src import ImplementingFromDict
