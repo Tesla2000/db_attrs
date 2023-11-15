@@ -1,11 +1,10 @@
 from abc import abstractmethod
 from typing import Any
 
-from db_class.JsonEncoder.JsonOperator import JSONOperator
+from db_class.src.JsonEncoder.JsonOperator import JSONOperator
 
 
-class Decoder(JSONOperator):
-
+class Encoder(JSONOperator):
     @staticmethod
     @abstractmethod
     def is_valid(element: Any) -> bool:
@@ -13,5 +12,5 @@ class Decoder(JSONOperator):
 
     @staticmethod
     @abstractmethod
-    def decode(element: Any) -> str:
+    def encode(element: Any) -> str:
         pass

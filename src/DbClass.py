@@ -4,8 +4,8 @@ from typing import Any
 
 from dataclasses import dataclass, field, asdict, fields
 
-from .JsonEncoder.Decoder import Decoder
-from .JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
+from db_class.src.JsonEncoder import Decoder
+from db_class.src.JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
 
 
 @dataclass
