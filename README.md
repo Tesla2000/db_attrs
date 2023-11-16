@@ -1,32 +1,75 @@
-# Alpha Trainer - Machine Learning Game Training Framework
+# DbClass module for automatic serialization and deserialization
 
-The Alpha Trainer package is a versatile framework designed for training machine learning models for custom games. It simplifies the process of training and evaluating models on custom game environments. This README provides an overview of the package and focuses on the main function, `simulate_game`.
+DbClass module is ment to be used in conjunction with databases or json which require serialization to save data to and deserialization to get data from.
 
 ## Installation
 
-You can install the `alpha_trainer` package using pip:
+You can install the `db_class` package using pip:
 
 ```bash
-pip install alpha_trainer
+pip install db_class
 ```
-
-The "Example" section now includes a code snippet showing how to use the `simulate_game` function within the README.md file. You can customize the example to match your specific use case and provide more detailed information as needed.
-
 
 ### Example
 
 Here's an example of how to use the `simulate_game` function:
 
 ```python
-from alpha_trainer import simulate_game, AlphaTrainableGame, AlphaMove
+import json
+import sys
+from dataclasses import dataclass
+from datetime import datetime
+from decimal import Decimal
 
-# Define your custom game class
-class MyGame(AlphaTrainableGame):
-    # Implement your custom game logic here
+from src import DbClass
+from src import DbClassLiteral
 
-# Simulate a game and collect data
-game_results = simulate_game(MyGame, num_simulations=1000, model=my_model)
 
-# Use the collected data to train and evaluate your machine learning model
-# ...
+def test_serialize_literal():
+    @dataclass
+    class Bar(DbClassLiteral):
+        dictionary: dict
+        date: datetime
+        decimal: Decimal
+
+    @dataclass
+    class Foo(DbClass):
+        dictionary: dict
+        date: datetime
+        decimal: Decimal
+        bar: Bar
+
+    foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1)))
+    serialized = foo.get_db_representation()
+    try:
+        json.dump(serialized, sys.stdout)
+    except:
+        assert False
+    deserialized = Foo.from_dict(serialized)
+    assert deserialized == foo
+
+
+def test_serialize():
+    @dataclass
+    class Bar(DbClass):
+        dictionary: dict
+        date: datetime
+        decimal: Decimal
+
+    @dataclass
+    class Foo(DbClass):
+        dictionary: dict
+        date: datetime
+        decimal: Decimal
+        bar: Bar
+
+    foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1)))
+    serialized = foo.get_db_representation()
+    foo.bar = foo.bar._id
+    try:
+        json.dump(serialized, sys.stdout)
+    except:
+        assert False
+    deserialized = Foo.from_dict(serialized)
+    assert deserialized == foo
 ```
