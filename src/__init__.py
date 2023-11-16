@@ -3,5 +3,5 @@ __all__ = [
     "DbClassLiteral",
 ]
 
-from .DbClass import DbClass
-from .DbClassLiteral import DbClassLiteral
+from .db_classes.DbClass import DbClass
+from .db_classes.DbClassLiteral import DbClassLiteral
