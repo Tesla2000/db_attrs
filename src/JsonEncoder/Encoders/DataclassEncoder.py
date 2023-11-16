@@ -12,4 +12,5 @@ class DataclassEncoder(Encoder):
     @staticmethod
     def encode(element) -> dict:
         from ..DefaultJsonEncoder import DefaultJsonEncoder
+
         return json.loads(json.dumps(asdict(element), cls=DefaultJsonEncoder))

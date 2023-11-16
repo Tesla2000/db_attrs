@@ -1,7 +1,7 @@
 __all__ = [
     "DbClass",
-    "ImplementingFromDict",
+    "DbClassLiteral",
 ]
 
 from .DbClass import DbClass
-from .ImplementingFromDict import ImplementingFromDict
+from .DbClassLiteral import DbClassLiteral

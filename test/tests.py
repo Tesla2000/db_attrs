@@ -1,23 +1,14 @@
+import json
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 
-from dacite import from_dict, Config
-
-from src import DbClass, ImplementingFromDict
-from src.DbClassLiteral import DbClassLiteral
-from src.JsonEncoder.JsonOperator import datetime_format
+from src import DbClass
+from src import DbClassLiteral
 
 
-def test_imports():
-    __all__ = [
-        "DbClass",
-        "ImplementingFromDict"
-    ]
-    assert __all__
-
-
-def test_serialize():
+def test_serialize_literal():
     @dataclass
     class Bar(DbClassLiteral):
         dictionary: dict
@@ -30,12 +21,42 @@ def test_serialize():
         date: datetime
         decimal: Decimal
         bar: Bar
-    time = datetime.strptime(datetime.now().strftime(datetime_format), datetime_format)
-    foo = Foo({}, time, Decimal(1), Bar({}, time, Decimal(1)))
+
+    foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1)))
     serialized = foo.get_db_representation()
-    deserialized = from_dict(Foo, serialized, Config(check_types=False))
+    try:
+        json.dump(serialized, sys.stdout)
+    except:
+        assert False
+    deserialized = Foo.from_dict(serialized)
     assert deserialized == foo
 
 
-if __name__ == '__main__':
+def test_serialize():
+    @dataclass
+    class Bar(DbClass):
+        dictionary: dict
+        date: datetime
+        decimal: Decimal
+
+    @dataclass
+    class Foo(DbClass):
+        dictionary: dict
+        date: datetime
+        decimal: Decimal
+        bar: Bar
+
+    foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1)))
+    serialized = foo.get_db_representation()
+    foo.bar = foo.bar._id
+    try:
+        json.dump(serialized, sys.stdout)
+    except:
+        assert False
+    deserialized = Foo.from_dict(serialized)
+    assert deserialized == foo
+
+
+if __name__ == "__main__":
+    test_serialize_literal()
     test_serialize()

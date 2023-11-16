@@ -5,7 +5,6 @@ from ..JsonEncoder.JsonOperator import JSONOperator
 
 
 class Decoder(JSONOperator):
-
     @staticmethod
     @abstractmethod
     def is_valid(element: Any) -> bool:

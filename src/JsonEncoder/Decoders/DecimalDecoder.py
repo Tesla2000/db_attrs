@@ -5,7 +5,6 @@ from ...JsonEncoder import Decoder
 
 
 class DecimalDecoder(Decoder):
-
     @staticmethod
     def is_valid(element: Any) -> bool:
         return element == Decimal
