@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from ..Decoder import Decoder
+from ...JsonEncoder import Decoder
 from ..JsonOperator import datetime_format
 
 
@@ -13,4 +13,6 @@ class DatetimeDecoder(Decoder):
 
     @staticmethod
     def decode(element: str) -> dataclass:
+        if isinstance(element, datetime):
+            return element
         return datetime.strptime(element, datetime_format)

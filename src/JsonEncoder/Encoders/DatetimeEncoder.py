@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any
 
 from ..Decoders.DatetimeDecoder import datetime_format
-from ...JsonEncoder.Encoder import Encoder
+from src.JsonEncoder.Encoder import Encoder
 
 
 class DatetimeEncoder(Encoder):

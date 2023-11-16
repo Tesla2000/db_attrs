@@ -4,7 +4,7 @@ from typing import Any
 
 from dataclasses import dataclass, field, fields
 
-from .JsonEncoder.Decoder import Decoder
+from .JsonEncoder import Decoder
 from .JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
 
 
@@ -21,13 +21,14 @@ class DbClass:
                     break
 
     def get_db_representation(self) -> dict:
+        from .DbClassLiteral import DbClassLiteral
         return json.loads(
             json.dumps(
                 dict(
                     (
                         field.name,
                         value._id
-                        if isinstance(value := getattr(self, field.name), DbClass)
+                        if isinstance(value := getattr(self, field.name), DbClass) and not isinstance(value, DbClassLiteral)
                         else value,
                     )
                     for field in fields(self)

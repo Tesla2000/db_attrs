@@ -1,14 +1,15 @@
+from decimal import Decimal
 from typing import Any
 
-from db_class.src.JsonEncoder.Decoder import Decoder
+from ...JsonEncoder import Decoder
 
 
 class DecimalDecoder(Decoder):
 
     @staticmethod
     def is_valid(element: Any) -> bool:
-        pass
+        return element == Decimal
 
     @staticmethod
-    def decode(element: Any) -> str:
-        pass
+    def decode(element: Any) -> Decimal:
+        return Decimal(element)

@@ -1,7 +1,7 @@
 import json
 from dataclasses import is_dataclass, asdict
 from typing import Any
-from ...JsonEncoder.Encoder import Encoder
+from ...JsonEncoder import Encoder
 
 
 class DataclassEncoder(Encoder):
