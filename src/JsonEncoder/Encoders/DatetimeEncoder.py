@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from src.JsonEncoder.Encoder import Encoder
+from ...JsonEncoder.Encoder import Encoder
 
 
 class DatetimeEncoder(Encoder):

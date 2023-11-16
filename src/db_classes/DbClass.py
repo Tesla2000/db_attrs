@@ -6,8 +6,8 @@ from dataclasses import dataclass, field, fields
 
 from dacite import from_dict, Config
 
-from src.JsonEncoder import Decoder
-from src.JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
+from ..JsonEncoder import Decoder
+from ..JsonEncoder.DefaultJsonEncoder import DefaultJsonEncoder
 
 
 @dataclass
