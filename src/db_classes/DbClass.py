@@ -12,8 +12,10 @@ from .JsonEncoder import DefaultJsonEncoder
 
 
 @dataclass
-class DbClass(metaclass=DbClassMetaclass):
-    _id: Any = field(init=False, default_factory=lambda: random.randint(0, 2**64))
+class DbClass(
+    metaclass=DbClassMetaclass
+):
+    _id: Any = field(init=False, default_factory=lambda: random.randint(0, 2 ** 64))
     json_encoder = DefaultJsonEncoder
 
     def __post_init__(self):
@@ -29,7 +31,7 @@ class DbClass(metaclass=DbClassMetaclass):
                         f.name,
                         value._id
                         if isinstance(value := getattr(self, f.name), DbClass)
-                        and not isinstance(value, DbClassLiteral)
+                           and not isinstance(value, DbClassLiteral)
                         else value,
                     )
                     for f in fields(self)
