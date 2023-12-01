@@ -6,12 +6,13 @@ from dataclasses import dataclass, field, fields
 
 from dacite import from_dict, Config
 
+from .DbClassMetaclass import DbClassMetaclass
 from .JsonEncoder import Decoder
 from .JsonEncoder import DefaultJsonEncoder
 
 
 @dataclass
-class DbClass:
+class DbClass(metaclass=DbClassMetaclass):
     _id: Any = field(init=False, default_factory=lambda: random.randint(0, 2**64))
     json_encoder = DefaultJsonEncoder
 
