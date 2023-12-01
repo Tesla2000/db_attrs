@@ -1,8 +1,7 @@
 import json
 import random
-from typing import Any, Self
-
 from dataclasses import dataclass, field, fields
+from typing import Any, Self
 
 from dacite import from_dict, Config
 

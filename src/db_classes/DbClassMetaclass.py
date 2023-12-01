@@ -1,28 +1,23 @@
-from dataclasses import dataclass, is_dataclass
+from dataclasses import field
 
-
-# class DataclassBlockedAnnotations(dict):
-#     def __init__(self, values: dict):
-#         super().__init__(values)
-#
-#     def __iter__(self):
-#         pass
+from .db_types.db_type import db_type
 
 
 class DbClassMetaclass(type):
     def __new__(cls, name, bases, namespace):
+        for annotation, value in namespace.get('__annotations__', {}).items():
+            if annotation not in namespace and issubclass(value, db_type):
+                f = field()
+                f.default = value()
+                namespace[annotation] = f
         new_class = super().__new__(cls, name, bases, namespace)
-        new_db_class = dataclass(new_class)
-        new_db_class.__annotations__ = {}
-        bases = list(base for base in new_db_class.__bases__)
-        bases.insert(0, new_db_class)
-        new_class = super().__new__(cls, name, tuple(bases), namespace)
-        new_db_class = dataclass(new_class)
-        new_db_class.__annotations__ = {}
-        return new_db_class
+        return new_class
 
 
 if __name__ == '__main__':
+    from dataclasses import is_dataclass
+
+
     class Foo(metaclass=DbClassMetaclass):
         foo: int
 

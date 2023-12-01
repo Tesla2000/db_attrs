@@ -3,10 +3,9 @@ from .integer import integer
 
 class _int(integer):
 
-    def __set__(self, instance, value):
-        super().__set__(instance, value)
-        if value < -(2 ** self.bits):
-            raise ValueError(f'{value=} must be positive')
-        if value > 2 ** self.bits - 1:
-            raise ValueError(f'{value=} must be less than {2 ** self.bits - 1}')
-        instance.__dict__[self.name] = value
+    def _validate(self, value):
+        super()._validate(value)
+        if value < -(2 ** (self.bits - 1)):
+            raise ValueError(f'{value=} must be more than {-(2 ** (self.bits - 1))}')
+        if value > 2 ** (self.bits - 1) - 1:
+            raise ValueError(f'{value=} must be less than {2 ** (self.bits - 1) - 1}')

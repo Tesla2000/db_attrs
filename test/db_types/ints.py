@@ -1,17 +1,19 @@
-from src.db_classes import int8, int16, int32, int64
 import unittest
+from dataclasses import dataclass
 
+from src.db_classes import int8, int16, int32, int64, DbClass
 
-class Foo:
-    a: int = int8()
-    b: int = int16()
-    c: int = int32()
-    d: int = int64()
+@dataclass
+class Foo(DbClass):
+    a: int8
+    b: int16
+    c: int32
+    d: int64
 
 
 class TestFooClass(unittest.TestCase):
     def setUp(self):
-        self.foo_instance = Foo()
+        self.foo_instance = Foo(0, 0, 0, 0)
 
     def test_attribute_a(self):
         with self.assertRaises(ValueError):
@@ -52,6 +54,7 @@ class TestFooClass(unittest.TestCase):
     def test_attribute_d_positive(self):
         self.foo_instance.d = -50000000000000000
         self.assertEqual(self.foo_instance.d, -50000000000000000)
+
 
 if __name__ == '__main__':
     unittest.main()
