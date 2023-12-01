@@ -9,3 +9,4 @@ class _uint(integer):
             raise ValueError(f'{value=} must be positive')
         if value > 2 ** self.bits - 1:
             raise ValueError(f'{value=} must be less than {2 ** self.bits - 1}')
+        instance.__dict__[self.name] = value

@@ -8,5 +8,5 @@ class integer(db_type, ABC):
 
     @abstractmethod
     def __set__(self, instance, value):
-        if not isinstance(value, integer):
+        if not isinstance(value, int):
             raise ValueError(f'{value=} must be an integer')

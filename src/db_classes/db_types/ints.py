@@ -15,4 +15,3 @@ class int32(_int):
 
 class int64(_int):
     bits = 64
-
