@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from .db_type import db_type
+from ._db_type import _db_type
 
 
-class integer(db_type, int, ABC):
+class _abs_integer(_db_type, int, ABC):
     bits: int
     _default = 0
 

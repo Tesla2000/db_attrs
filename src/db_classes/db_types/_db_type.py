@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class db_type(ABC):
+class _db_type(ABC):
     _default = None
 
     @abstractmethod

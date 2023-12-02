@@ -1,7 +1,7 @@
-from .integer import integer
+from ._abs_integer import _abs_integer
 
 
-class _int(integer):
+class _int(_abs_integer):
 
     def _validate(self, value):
         super()._validate(value)

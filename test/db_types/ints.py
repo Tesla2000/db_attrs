@@ -3,12 +3,13 @@ from dataclasses import dataclass
 
 from src.db_classes import int8, int16, int32, int64, DbClass
 
+
 @dataclass
 class Foo(DbClass):
-    a: int8
-    b: int16
-    c: int32
-    d: int64
+    a: int8 | int
+    b: int16 | int
+    c: int32 | int
+    d: int64 | int
 
 
 class TestFooClass(unittest.TestCase):
