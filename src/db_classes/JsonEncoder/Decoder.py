@@ -12,5 +12,5 @@ class Decoder(JSONOperator):
 
     @staticmethod
     @abstractmethod
-    def decode(element: Any) -> str:
+    def decode(element: Any, _) -> str:
         pass

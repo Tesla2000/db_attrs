@@ -1,15 +1,15 @@
 import unittest
-from dataclasses import dataclass
+from attrs import define
 
 from src.db_classes import int8, int16, int32, int64, DbClass
 
 
-@dataclass
+@define
 class Foo(DbClass):
-    a: int8 | int
-    b: int16 | int
-    c: int32 | int
-    d: int64 | int
+    a: int = int8()
+    b: int = int16()
+    c: int = int32()
+    d: int = int64()
 
 
 class TestFooClass(unittest.TestCase):
@@ -57,5 +57,5 @@ class TestFooClass(unittest.TestCase):
         self.assertEqual(self.foo_instance.d, -50000000000000000)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

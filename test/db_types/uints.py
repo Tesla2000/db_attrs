@@ -1,21 +1,20 @@
-from dataclasses import dataclass, field
+from attrs import define
 
 from src.db_classes import uint8, uint16, uint32, uint64, DbClass
 import unittest
 
 
-@dataclass
+@define
 class Foo(DbClass):
-    a: uint8 | int
-    b: uint16 | int = field(default=uint16(2))
-    c: uint32 | int
-    d: uint64 | int
+    a: int = uint8()
+    b: int = uint16()
+    c: int = uint32()
+    d: int = uint64()
 
 
 class TestFooClass(unittest.TestCase):
     def setUp(self):
-        self.foo_instance = Foo(a=uint8(10))
-        self.foo_instance.c = 111
+        self.foo_instance = Foo(0, 0, 0, 0)
 
     # Negative tests - ValueErrors on out-of-range assignments
     def test_attribute_a_out_of_range(self):
@@ -60,5 +59,5 @@ class TestFooClass(unittest.TestCase):
         self.assertEqual(self.foo_instance.d, 50000000000000000)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

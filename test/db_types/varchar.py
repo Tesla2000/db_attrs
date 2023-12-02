@@ -1,22 +1,21 @@
 import unittest
-from dataclasses import dataclass
+from attrs import define
 
 from src.db_classes import DbClass, varchar, text
 
 
-@dataclass
+@define
 class Foo(DbClass):
-    a: varchar(5)
-    b: varchar(6)
-    c: varchar(7)
-    d: varchar(8)
-    e: text
-
+    a: str = varchar(5)
+    b: str = varchar(6)
+    c: str = varchar(7)
+    d: str = varchar(8)
+    e: str = text()
 
 
 class TestFooClass(unittest.TestCase):
     def setUp(self):
-        self.foo_instance = Foo()
+        self.foo_instance = Foo("", "", "", "", "")
 
     # Negative tests - ValueErrors on out-of-range assignments
     def test_attribute_a_out_of_range(self):
@@ -36,7 +35,7 @@ class TestFooClass(unittest.TestCase):
             self.foo_instance.d = "Exceeded limit"  # Exceeds varchar(8) length
 
     def test_attribute_e_wrong_type(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             self.foo_instance.e = 1
 
     # Positive tests - Valid assignments within range
@@ -78,6 +77,6 @@ Bop ba bodda bope"""
         self.foo_instance.e = passed_text
         self.assertEqual(self.foo_instance.e, passed_text)
 
-if __name__ == '__main__':
-    unittest.main()
 
+if __name__ == "__main__":
+    unittest.main()

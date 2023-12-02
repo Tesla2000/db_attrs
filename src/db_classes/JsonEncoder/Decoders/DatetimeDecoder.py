@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 from datetime import datetime
+
+import cattrs
 
 from ...JsonEncoder import Decoder
 
@@ -10,7 +11,10 @@ class DatetimeDecoder(Decoder):
         return field_type == datetime
 
     @staticmethod
-    def decode(element: str) -> dataclass:
+    def decode(element: str, _) -> datetime:
         if isinstance(element, datetime):
             return element
         return datetime.fromtimestamp(float(element))
+
+
+cattrs.register_structure_hook(datetime, DatetimeDecoder.decode)

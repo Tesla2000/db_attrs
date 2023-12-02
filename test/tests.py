@@ -1,6 +1,6 @@
 import json
 import sys
-from dataclasses import dataclass
+from attrs import define
 from datetime import datetime
 from decimal import Decimal
 
@@ -9,13 +9,13 @@ from src.db_classes import DbClassLiteral
 
 
 def test_serialize_literal():
-    @dataclass
+    @define
     class Bar(DbClassLiteral):
         dictionary: dict
         date: datetime
         decimal: Decimal
 
-    @dataclass
+    @define
     class Foo(DbClass):
         dictionary: dict
         date: datetime
@@ -33,13 +33,13 @@ def test_serialize_literal():
 
 
 def test_serialize():
-    @dataclass
+    @define
     class Bar(DbClass):
         dictionary: dict
         date: datetime
         decimal: Decimal
 
-    @dataclass
+    @define
     class Foo(DbClass):
         dictionary: dict
         date: datetime
