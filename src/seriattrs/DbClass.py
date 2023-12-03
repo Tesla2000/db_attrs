@@ -14,6 +14,8 @@ class DbClass:
     _id: Any = field(init=False, factory=lambda: random.randint(0, 2**64 - 1))
 
     def __attrs_post_init__(self):
+        if hasattr(self, 'id'):
+            self._id = self.id
         self._decode()
 
     def get_db_representation(self) -> dict:
