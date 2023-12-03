@@ -11,7 +11,7 @@ from .JsonEncoder.default_json_encoder import json_encoder
 
 @define
 class DbClass:
-    _id: Any = field(init=False, factory=lambda: random.randint(0, 2**64 - 1))
+    _id: Any = field(init=False, factory=lambda: random.randint(-2**63, 2**63 - 1))
 
     def __attrs_post_init__(self):
         if hasattr(self, 'id'):
