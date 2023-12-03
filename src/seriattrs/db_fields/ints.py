@@ -1,7 +1,6 @@
 from functools import partial
-from typing import Any
 
-from attr import field, validators, define
+from attr import field, validators
 
 
 def _check_int(instance, attribute, value, bits: int):

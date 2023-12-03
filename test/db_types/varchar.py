@@ -1,7 +1,7 @@
 import unittest
 from attrs import define
 
-from src.db_attrs import DbClass, varchar, text
+from src.seriattrs import DbClass, varchar, text
 
 
 @define

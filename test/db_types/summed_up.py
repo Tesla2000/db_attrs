@@ -2,7 +2,7 @@ import unittest
 
 from attrs import define
 
-from src.db_attrs import int8, DbClass, varchar, text, uint16
+from src.seriattrs import int8, DbClass, varchar, text, uint16
 
 
 @define

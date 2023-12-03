@@ -1,20 +1,20 @@
-# DbAttrs module for automatic serialization and deserialization
+# SeriArrts module for automatic serialization and deserialization
 
-DbAttrs is an unofficial extension to [attrs](https://www.attrs.org/) library. 
+SeriArrts is an unofficial extension to [attrs](https://www.attrs.org/) library. 
 The module is ment to be used in conjunction with databases or json which may require serialization and deserialization.
 To allow creation of custom Object-Database mapping DbAttrs supports basic datatype such as ints, uints, vars etc.
 
 ## Installation
 
-You can install the `db_attrs` package using pip:
+You can install the `seriattrs` package using pip:
 
 ```bash
-pip install db_attrs
+pip install seriattrs
 ```
 
 ### Example
 
-Here's an example of how to use the serialization and deserialization with `DbClass`:
+Here's an example of how to use the serialization and deserialization with `SeriArrts`:
 
 ```python
 @define
