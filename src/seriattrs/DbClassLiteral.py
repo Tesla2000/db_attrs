@@ -1,3 +1,5 @@
+from typing import get_args
+
 from attr import fields
 from attrs import define
 
@@ -18,7 +20,10 @@ def _handle_new_db(value, db_class_type):
     new_instance._id = id_value
     value["_id"] = id_value
     for f in fields(db_class_type):
-        if issubclass(f.type, DbClassLiteral):
+        types = list(get_args(f.type))
+        if isinstance(f.type, type):
+            types.append(f.type)
+        if any(issubclass(field_type, DbClassLiteral) for field_type in types):
             setattr(
                 new_instance,
                 f.name,

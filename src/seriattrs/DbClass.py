@@ -1,16 +1,17 @@
 import json
 import random
-from typing import Any, Self
+from typing import Any, Self, get_args, Optional
 
 from attr import define, fields, field
 
+from .DbClassCreator import DbClassCreator
 from .db_attrs_converter import db_attrs_converter
 from .JsonEncoder import Decoder
 from .JsonEncoder.default_json_encoder import json_encoder
 
 
 @define
-class DbClass:
+class DbClass(metaclass=DbClassCreator):
     _id: Any = field(init=False, factory=lambda: random.randint(-2**63, 2**63 - 1))
 
     def __attrs_post_init__(self):
@@ -18,7 +19,7 @@ class DbClass:
             self._id = self.id
         self._decode()
 
-    def get_db_representation(self) -> dict:
+    def serialize(self) -> dict:
         from .DbClassLiteral import DbClassLiteral
 
         return json.loads(
@@ -38,7 +39,7 @@ class DbClass:
         )
 
     @classmethod
-    def from_dict(cls, dictionary: dict) -> Self:
+    def deserialize(cls, dictionary: dict) -> Self:
         deserialized = db_attrs_converter.structure(dictionary, cls)
         deserialized._fill_id(dictionary)
         return deserialized
@@ -48,7 +49,10 @@ class DbClass:
 
         self._id = dictionary["_id"]
         for f in fields(type(self)):
-            if issubclass(f.type, DbClassLiteral):
+            types = list(get_args(f.type))
+            if isinstance(f.type, type):
+                types.append(f.type)
+            if any(issubclass(field_type, DbClassLiteral) for field_type in types):
                 f.type._fill_id(getattr(self, f.name), dictionary[f.name])
 
     def _decode(self):

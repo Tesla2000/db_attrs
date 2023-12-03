@@ -30,12 +30,12 @@ def test_serialize_literal():
         color: Color
 
     foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1), Color.RED), Color.RED)
-    serialized = foo.get_db_representation()
+    serialized = foo.serialize()
     try:
         json.dump(serialized, sys.stdout)
     except:
         assert False
-    deserialized = Foo.from_dict(serialized)
+    deserialized = Foo.deserialize(serialized)
     assert deserialized == foo
 
 
@@ -59,13 +59,13 @@ def test_serialize():
         color: Color
 
     foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1), Color.RED), Color.RED)
-    serialized = foo.get_db_representation()
+    serialized = foo.serialize()
     foo.bar = foo.bar._id
     try:
         json.dump(serialized, sys.stdout)
     except:
         assert False
-    deserialized = Foo.from_dict(serialized)
+    deserialized = Foo.deserialize(serialized)
     assert deserialized == foo
 
 
