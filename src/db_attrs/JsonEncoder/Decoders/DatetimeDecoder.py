@@ -1,8 +1,7 @@
 from datetime import datetime
 
-import cattrs
-
 from ...JsonEncoder import Decoder
+from ...db_attrs_converter import db_attrs_converter
 
 
 class DatetimeDecoder(Decoder):
@@ -17,4 +16,4 @@ class DatetimeDecoder(Decoder):
         return datetime.fromtimestamp(float(element))
 
 
-cattrs.register_structure_hook(datetime, DatetimeDecoder.decode)
+db_attrs_converter.register_structure_hook(datetime, DatetimeDecoder.decode)

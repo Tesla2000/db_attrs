@@ -1,9 +1,8 @@
 from decimal import Decimal
 from typing import Any
 
-import cattrs
-
 from ...JsonEncoder import Decoder
+from ...db_attrs_converter import db_attrs_converter
 
 
 class DecimalDecoder(Decoder):
@@ -16,4 +15,4 @@ class DecimalDecoder(Decoder):
         return Decimal(element)
 
 
-cattrs.register_structure_hook(Decimal, DecimalDecoder.decode)
+db_attrs_converter.register_structure_hook(Decimal, DecimalDecoder.decode)

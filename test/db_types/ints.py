@@ -1,13 +1,13 @@
 import unittest
 from attrs import define
 
-from src.db_classes import int8, int16, int32, int64, DbClass
+from src.db_attrs import int8, int16, int32, int64, DbClass, uint16
 
 
 @define
 class Foo(DbClass):
     a: int = int8()
-    b: int = int16()
+    b: int = uint16()
     c: int = int32()
     d: int = int64()
 

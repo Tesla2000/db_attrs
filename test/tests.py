@@ -4,8 +4,8 @@ from attrs import define
 from datetime import datetime
 from decimal import Decimal
 
-from src.db_classes import DbClass
-from src.db_classes import DbClassLiteral
+from src.db_attrs import DbClass
+from src.db_attrs import DbClassLiteral
 
 
 def test_serialize_literal():

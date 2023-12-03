@@ -1,6 +1,6 @@
 from attrs import define
 
-from src.db_classes import uint8, uint16, uint32, uint64, DbClass
+from src.db_attrs import uint8, uint16, uint32, uint64, DbClass
 import unittest
 
 

@@ -3,10 +3,9 @@ import random
 from typing import Any, Self
 
 from attr import define, fields, field
-from cattrs import structure
 
-
-from .JsonEncoder.Decoder import Decoder
+from .db_attrs_converter import db_attrs_converter
+from .JsonEncoder import Decoder
 from .JsonEncoder.default_json_encoder import json_encoder
 
 
@@ -38,7 +37,7 @@ class DbClass:
 
     @classmethod
     def from_dict(cls, dictionary: dict) -> Self:
-        deserialized = structure(dictionary, cls)
+        deserialized = db_attrs_converter.structure(dictionary, cls)
         deserialized._fill_id(dictionary)
         return deserialized
 
