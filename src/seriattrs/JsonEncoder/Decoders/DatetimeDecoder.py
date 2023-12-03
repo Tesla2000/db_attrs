@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from ...JsonEncoder import Decoder
-from ...db_attrs_converter import db_attrs_converter
 
 
 class DatetimeDecoder(Decoder):
@@ -16,4 +15,3 @@ class DatetimeDecoder(Decoder):
         return datetime.fromtimestamp(float(element))
 
 
-db_attrs_converter.register_structure_hook(datetime, DatetimeDecoder.decode)
