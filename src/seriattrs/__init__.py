@@ -1,7 +1,7 @@
 __all__ = [
     "DbClass",
     "DbClassLiteral",
-    "db_class_converter",
+    "db_attrs_converter",
     "int8",
     "int16",
     "int32",
