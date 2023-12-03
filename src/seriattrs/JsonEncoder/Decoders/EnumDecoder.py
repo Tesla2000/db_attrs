@@ -9,6 +9,8 @@ T = TypeVar('T', bound=Enum)
 class EnumDecoder(Decoder):
     @staticmethod
     def is_valid(element: Any) -> bool:
+        if not isinstance(element, type):
+            return False
         return issubclass(element, Enum)
 
     @staticmethod
