@@ -23,6 +23,8 @@ def _handle_new_db(value, db_class_type):
         types = list(get_args(f.type))
         if isinstance(f.type, type):
             types.append(f.type)
+        if references := tuple(field_type for field_type in types if isinstance(field_type, str)):
+            raise ValueError(f"Data can't be deserialized as field {f.name} in {db_class_type.__name__} has a forward references {references}. Consider making classes {references} DbClasses and initializing them.")
         if any(issubclass(field_type, DbClassLiteral) for field_type in types):
             setattr(
                 new_instance,
