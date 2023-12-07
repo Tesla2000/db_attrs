@@ -47,7 +47,7 @@ def _get_forward_refs(field_type):
 def _update_hint(forward_ref: ForwardRef, current_string_type: GenericAlias) -> GenericAlias:
     forward_ref_name = created_types[forward_ref].__name__
     return eval(
-        re.sub(fr'ForwardRef\(\'{forward_ref_name}\'\)', forward_ref_name, str(current_string_type)),
+        re.sub(fr'(?:ForwardRef\(|)\'{forward_ref_name}\'\)?', forward_ref_name, str(current_string_type)),
         globals(), {forward_ref_name: created_types[forward_ref]}
     )
 
