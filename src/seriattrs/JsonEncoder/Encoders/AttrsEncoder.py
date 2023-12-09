@@ -14,5 +14,8 @@ class AttrsEncoder(Encoder):
     @staticmethod
     def encode(element) -> dict:
         from ..DefaultJsonEncoder import DefaultJsonEncoder
+        from ... import DbClassLiteral, DbClass
 
-        return json.loads(json.dumps(asdict(element), cls=DefaultJsonEncoder))
+        if isinstance(element, DbClassLiteral) or not isinstance(element, DbClass):
+            return json.loads(json.dumps(asdict(element), cls=DefaultJsonEncoder))
+        return element._id
