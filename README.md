@@ -9,7 +9,7 @@ To allow creation of custom Object-Database mapping DbAttrs supports basic datat
 You can install the `seriattrs` package using pip:
 
 ```bash
-pip install seriattrs
+pip install seriadataclass
 ```
 
 ### Example
