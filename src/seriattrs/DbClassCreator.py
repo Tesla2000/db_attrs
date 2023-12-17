@@ -15,7 +15,8 @@ class DbClassCreator(type):
             forward_refs = _get_forward_refs(field_type)
             for forward_ref in forward_refs:
                 if forward_ref in created_types:
-                    new_class.__annotations__[field_name] = _update_hint(forward_ref, new_class.__annotations__[field_name])
+                    new_class.__annotations__[field_name] = _update_hint(forward_ref,
+                                                                         new_class.__annotations__[field_name])
                 else:
                     type_checked_fields[forward_ref].append(new_class)
         created_types[ForwardRef(name)] = new_class
@@ -38,7 +39,8 @@ class DbClassCreator(type):
 
 
 def _get_forward_refs(field_type):
-    forward_refs = list(ForwardRef(ref) if isinstance(ref, str) else ref for ref in get_args(field_type) if isinstance(ref, str | ForwardRef))
+    forward_refs = list(ForwardRef(ref) if isinstance(ref, str) else ref for ref in get_args(field_type) if
+                        isinstance(ref, (str, ForwardRef)))
     if isinstance(field_type, str):
         forward_refs.append(ForwardRef(field_type))
     return forward_refs
@@ -47,13 +49,13 @@ def _get_forward_refs(field_type):
 def _update_hint(forward_ref: ForwardRef, current_string_type: GenericAlias) -> GenericAlias:
     forward_ref_name = created_types[forward_ref].__name__
     return eval(
-        re.sub(fr'(?:ForwardRef\(|)\'{forward_ref_name}\'\)?', forward_ref_name, str(current_string_type)),
+        re.sub(r'(?:ForwardRef\(|)\'' + forward_ref_name + r'\'\)?', forward_ref_name, str(current_string_type)),
         globals(), {forward_ref_name: created_types[forward_ref]}
     )
 
 
-type_checked_fields: defaultdict[ForwardRef, list[DbClassCreator]] = defaultdict(list)
-created_types: dict[ForwardRef, DbClassCreator] = {}
+type_checked_fields = defaultdict(list)
+created_types = {}
 __all__ = [
     'typing'
 ]

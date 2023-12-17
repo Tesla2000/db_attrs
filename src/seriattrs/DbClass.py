@@ -12,7 +12,7 @@ from .JsonEncoder.default_json_encoder import json_encoder
 
 @define
 class DbClass(metaclass=DbClassCreator):
-    _id: Any = field(init=False, factory=lambda: random.randint(-2**63, 2**63 - 1))
+    _id = field(init=False, type=Any, factory=lambda: random.randint(-2**63, 2**63 - 1))
 
     def __attrs_post_init__(self):
         if hasattr(self, 'id'):
@@ -27,10 +27,10 @@ class DbClass(metaclass=DbClassCreator):
                 dict(
                     (
                         f.name,
-                        value._id
-                        if isinstance(value := getattr(self, f.name), DbClass)
-                        and not isinstance(value, DbClassLiteral)
-                        else value,
+                        getattr(self, f.name)._id
+                        if isinstance(getattr(self, f.name), DbClass)
+                        and not isinstance(getattr(self, f.name), DbClassLiteral)
+                        else getattr(self, f.name),
                     )
                     for f in fields(type(self))
                 ),
