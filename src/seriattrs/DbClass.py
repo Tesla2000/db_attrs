@@ -1,6 +1,6 @@
 import json
 import random
-from typing import Any, Self, get_args, Optional
+from typing import Any, Self, get_args
 
 from attr import define, fields, field
 
@@ -52,7 +52,7 @@ class DbClass(metaclass=DbClassCreator):
             types = list(get_args(f.type))
             if isinstance(f.type, type):
                 types.append(f.type)
-            if any(issubclass(field_type, DbClassLiteral) for field_type in types):
+            if any(issubclass(type(self) if field_type == Self else field_type, DbClassLiteral) for field_type in types):
                 f.type._fill_id(getattr(self, f.name), dictionary[f.name])
 
     def _decode(self):
