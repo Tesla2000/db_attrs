@@ -9,4 +9,4 @@ class DefaultJsonEncoder(JSONEncoder):
             if encoder.is_valid(obj):
                 return encoder.encode(obj)
         else:
-            raise ValueError(obj + " can't be encoded")
+            raise ValueError(obj, "can't be encoded")
