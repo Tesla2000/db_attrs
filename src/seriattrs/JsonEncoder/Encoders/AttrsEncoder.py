@@ -20,10 +20,11 @@ class AttrsEncoder(Encoder):
 
         if isinstance(element, DbClassLiteral) or not isinstance(element, DbClass):
             memory = {}
-            asdict(element, memory=memory)
-            fill_memory_gaps(memory, memory)
             dictionary = asdict(element, memory=memory)
-            return json.loads(json.dumps(dictionary, cls=DefaultJsonEncoder))
+            fill_memory_gaps(memory, memory)
+            return serialize_values(dictionary)
+            # dictionary = asdict(element, memory=memory)
+            # return json.loads(json.dumps(dictionary, cls=DefaultJsonEncoder))
         return element._id
 
 
@@ -50,7 +51,27 @@ def fill_memory_gaps(memory_item, memory, short_term_memory = None):
         raise ValueError
 
 
-def serializer(_, __, obj):
+def serialize_values(values, short_term_memory = None):
+    if short_term_memory is None:
+        short_term_memory = list()
+    if values in short_term_memory:
+        return values
+    else:
+        short_term_memory.append(values)
+    if isinstance(values, Mapping):
+        for key, value in tuple(values.items()):
+            values[key] = serialize_values(value, short_term_memory)
+        return values
+    elif isinstance(values, Sequence):
+        for index, item in values:
+            values[index] = serialize_values(item, short_term_memory)
+        return values
+    else:
+        return serialize_value(values)
+
+
+
+def serialize_value(obj):
     return DefaultJsonEncoder().default(obj, strict=False)
 
 class _Id(int):
