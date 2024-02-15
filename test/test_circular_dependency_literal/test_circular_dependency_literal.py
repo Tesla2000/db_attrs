@@ -1,8 +1,8 @@
-from test.test_circular_dependency.Ala import Ala
-from test.test_circular_dependency.Cat import Cat
+from test.test_circular_dependency_literal.Ala import Ala
+from test.test_circular_dependency_literal.Cat import Cat
 
 
-def test_circular_dependency():
+def test_circular_dependency_not_literal():
     cat = Cat(None)
     ala = Ala(cat)
     cat.ala = ala
