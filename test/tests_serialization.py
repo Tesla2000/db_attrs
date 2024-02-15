@@ -67,8 +67,3 @@ def test_serialize():
         assert False
     deserialized = Foo.deserialize(serialized)
     assert deserialized == foo
-
-
-if __name__ == "__main__":
-    test_serialize_literal()
-    test_serialize()

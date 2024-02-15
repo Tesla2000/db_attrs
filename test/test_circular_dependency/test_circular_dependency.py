@@ -13,7 +13,3 @@ def test_circular_dependency():
     ala.cat = cat._id
     assert Cat.deserialize(serialized_cat) == cat
     assert Ala.deserialize(serialized_ala) == ala
-
-
-if __name__ == '__main__':
-    test_circular_dependency()
