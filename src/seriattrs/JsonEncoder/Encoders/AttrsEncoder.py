@@ -4,6 +4,7 @@ from typing import Any, Mapping, Sequence
 from attr import has
 from attr._make import fields
 
+from ..DefaultJsonEncoder import DefaultJsonEncoder
 from ...JsonEncoder import Encoder
 
 
@@ -19,11 +20,38 @@ class AttrsEncoder(Encoder):
 
         if isinstance(element, DbClassLiteral) or not isinstance(element, DbClass):
             memory = {}
+            asdict(element, memory=memory)
+            fill_memory_gaps(memory, memory)
             dictionary = asdict(element, memory=memory)
-            dictionary = asdict(dictionary, memory=memory)
             return json.loads(json.dumps(dictionary, cls=DefaultJsonEncoder))
         return element._id
 
+
+def fill_memory_gaps(memory_item, memory, short_term_memory = None):
+    if short_term_memory is None:
+        short_term_memory = list()
+    if memory_item in short_term_memory:
+        return
+    else:
+        short_term_memory.append(memory_item)
+    if isinstance(memory_item, Mapping):
+        for key, value in tuple(memory_item.items()):
+            if isinstance(value, _Id):
+                memory_item[key] = memory[memory_item[key]]
+            else:
+                fill_memory_gaps(value, memory, short_term_memory)
+    elif isinstance(memory_item, Sequence):
+        for index, item in memory_item:
+            if isinstance(item, _Id):
+                memory_item[index] = memory[item]
+            else:
+                fill_memory_gaps(item, memory, short_term_memory)
+    elif isinstance(memory_item, _Id):
+        raise ValueError
+
+
+def serializer(_, __, obj):
+    return DefaultJsonEncoder().default(obj, strict=False)
 
 class _Id(int):
     pass
