@@ -1,13 +1,11 @@
-import json
 import random
-from typing import Any, Self, get_args
+from typing import Any, Self, get_args, Mapping, Sequence
 
-from attr import define, fields, field
+from attr import define, fields, field, has
 
 from .DbClassCreator import DbClassCreator
+from .JsonEncoder import Decoder, DefaultJsonEncoder
 from .db_attrs_converter import db_attrs_converter
-from .JsonEncoder import Decoder
-from .JsonEncoder.default_json_encoder import json_encoder
 
 
 @define
@@ -22,8 +20,7 @@ class DbClass(metaclass=DbClassCreator):
     def serialize(self) -> dict:
         from .DbClassLiteral import DbClassLiteral
 
-        return json.loads(
-            json.dumps(
+        return DefaultJsonEncoder.serialize_values(
                 dict(
                     (
                         f.name,
@@ -34,14 +31,13 @@ class DbClass(metaclass=DbClassCreator):
                     )
                     for f in fields(type(self))
                 ),
-                cls=json_encoder,
             )
-        )
 
     @classmethod
     def deserialize(cls, dictionary: dict) -> Self:
+        type(cls).temp_instances = {}
         deserialized = db_attrs_converter.structure(dictionary, cls)
-        deserialized._fill_id(dictionary)
+        type(cls).temp_instances = {}
         return deserialized
 
     def _fill_id(self, dictionary: dict):
@@ -53,7 +49,8 @@ class DbClass(metaclass=DbClassCreator):
             if isinstance(f.type, type):
                 types.append(f.type)
             if any(issubclass(type(self) if field_type == Self else field_type, DbClassLiteral) for field_type in types):
-                f.type._fill_id(getattr(self, f.name), dictionary[f.name])
+                field_type = next(field_type for field_type in types if issubclass(type(self) if field_type == Self else field_type, DbClassLiteral))
+                field_type._fill_id(getattr(self, f.name), dictionary[f.name])
 
     def _decode(self):
         for f in fields(type(self)):
@@ -61,3 +58,28 @@ class DbClass(metaclass=DbClassCreator):
                 if decoder.is_valid(f.type):
                     setattr(self, f.name, decoder.decode(getattr(self, f.name), f.type))
                     break
+    
+    @classmethod
+    def _fill_deserialize_values(cls, values, short_term_memory=None):
+        if short_term_memory is None:
+            short_term_memory = dict()
+        if isinstance(values, DbClass) and values._id in short_term_memory:
+            return short_term_memory[values._id]
+        elif isinstance(values, dict) and values.get('_id') in short_term_memory:
+            return short_term_memory[values['_id']]
+        elif isinstance(values, DbClass):
+            short_term_memory[values._id] = values
+        if isinstance(values, Mapping):
+            for key, value in tuple(values.items()):
+                values[key] = cls._fill_deserialize_values(value, short_term_memory)
+            return values
+        elif isinstance(values, Sequence):
+            for index, item in values:
+                values[index] = cls._fill_deserialize_values(item, short_term_memory)
+            return values
+        elif has(values):
+            for f in fields(type(values)):
+                setattr(values, f.name, cls._fill_deserialize_values(getattr(values, f.name), short_term_memory))
+            return values
+        else:
+            return values
