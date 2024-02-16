@@ -23,8 +23,6 @@ class AttrsEncoder(Encoder):
             dictionary = asdict(element, memory=memory)
             fill_memory_gaps(memory, memory)
             return DefaultJsonEncoder.serialize_values(dictionary)
-            # dictionary = asdict(element, memory=memory)
-            # return json.loads(json.dumps(dictionary, cls=DefaultJsonEncoder))
         return element._id
 
 

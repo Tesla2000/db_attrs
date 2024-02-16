@@ -1,14 +1,11 @@
-import json
 import random
-from copy import deepcopy
 from typing import Any, Self, get_args, Mapping, Sequence
 
 from attr import define, fields, field, has
 
 from .DbClassCreator import DbClassCreator
-from .db_attrs_converter import db_attrs_converter
 from .JsonEncoder import Decoder, DefaultJsonEncoder
-from .JsonEncoder.default_json_encoder import json_encoder
+from .db_attrs_converter import db_attrs_converter
 
 
 @define
@@ -41,8 +38,6 @@ class DbClass(metaclass=DbClassCreator):
         type(cls).temp_instances = {}
         deserialized = db_attrs_converter.structure(dictionary, cls)
         type(cls).temp_instances = {}
-        # cls._fill_deserialize_values(deserialized)
-        # deserialized._fill_id(dictionary)
         return deserialized
 
     def _fill_id(self, dictionary: dict):
