@@ -5,7 +5,7 @@ from attr import fields
 from attrs import define
 
 from .DbClass import DbClass
-from ._db_attrs_converter import _db_attrs_converter
+from .._db_attrs_converter import _db_attrs_converter
 
 
 @define

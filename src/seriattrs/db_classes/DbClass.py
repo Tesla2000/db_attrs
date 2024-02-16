@@ -1,12 +1,11 @@
 import random
-from abc import ABC
 from typing import Any, Self
 
 from attr import define, fields, field
 
 from .DbClassCreator import DbClassCreator
-from .JsonEncoder import Decoder, DefaultJsonEncoder
-from ._db_attrs_converter import _db_attrs_converter
+from ..JsonEncoder import Decoder, DefaultJsonEncoder
+from .._db_attrs_converter import _db_attrs_converter
 
 
 @define
