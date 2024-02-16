@@ -1,5 +1,6 @@
 import re
 import typing
+from abc import ABCMeta
 from collections import defaultdict
 from inspect import signature
 from types import GenericAlias
@@ -10,29 +11,36 @@ from attr import fields
 _ = typing
 
 
-class DbClassCreator(type):
+class DbClassCreator(ABCMeta):
+    """Metaclass that converts Forward references to class instances.
+
+    class Bar(DbClass):
+        foo: "Foo" => Foo
+
+    class Foo(DbClass):
+        bar: "Bar" => Bar
+    """
     _type_checked_fields = defaultdict(list)
-    created_types = {}
-    temp_instances = {}
+    _created_types = {}
 
     def __new__(cls, name: str, bases: tuple, namespace: dict[str, Any]):
         new_class = super().__new__(cls, name, bases, namespace)
         for field_name, field_type in new_class.__annotations__.items():
             forward_refs = cls._get_forward_refs(field_type)
             for forward_ref in forward_refs:
-                if forward_ref in cls.created_types:
+                if forward_ref in cls._created_types:
                     new_class.__annotations__[field_name] = cls._update_hint(forward_ref,
                                                                              new_class.__annotations__[field_name])
                 else:
                     cls._type_checked_fields[forward_ref].append(new_class)
-        cls.created_types[ForwardRef(name)] = new_class
+        cls._created_types[ForwardRef(name)] = new_class
         for db_class in cls._type_checked_fields.get(ForwardRef(name), []):
             attrs_fields = []
             for f in fields(db_class):
                 forward_refs = cls._get_forward_refs(f.type)
                 current_string_type = f.type
                 for forward_ref in forward_refs:
-                    if forward_ref not in cls.created_types:
+                    if forward_ref not in cls._created_types:
                         continue
                     current_string_type = cls._update_hint(forward_ref, current_string_type)
                 field_value = dict((arg, getattr(f, arg)) for arg in signature(type(f)).parameters if hasattr(f, arg))
@@ -53,8 +61,8 @@ class DbClassCreator(type):
 
     @classmethod
     def _update_hint(cls, forward_ref: ForwardRef, current_string_type: GenericAlias) -> GenericAlias:
-        forward_ref_name = cls.created_types[forward_ref].__name__
+        forward_ref_name = cls._created_types[forward_ref].__name__
         return eval(
             re.sub(r'(?:ForwardRef\(|)\'' + forward_ref_name + r'\'\)?', forward_ref_name, str(current_string_type)),
-            globals(), {forward_ref_name: cls.created_types[forward_ref]}
+            globals(), {forward_ref_name: cls._created_types[forward_ref]}
         )

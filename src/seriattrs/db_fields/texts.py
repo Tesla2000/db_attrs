@@ -33,6 +33,17 @@ def char(
     on_setattr=None,
     alias=None,
 ):
+    """Field which can be used to store char values after specifying the length.
+
+    @define
+    class Foo(DbClass):
+        a: str = char(5)
+        b: str = char(6)
+        c: str = char(7)
+        d: str = char(8)
+
+    :param length: The length of a variable.
+    """
     return partial(
         field,
         validator=[validators.instance_of(str), partial(_check_char, length=length)]
@@ -73,6 +84,17 @@ def varchar(
     on_setattr=None,
     alias=None,
 ):
+    """Field which can be used to store varchar values after specifying the max_length.
+
+    @define
+    class Foo(DbClass):
+        a: str = varchar(5)
+        b: str = varchar(6)
+        c: str = varchar(7)
+        d: str = varchar(8)
+
+    :param max_length: The maximal length of a variable.
+    """
     return partial(
         field,
         validator=[
