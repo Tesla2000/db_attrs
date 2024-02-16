@@ -191,18 +191,15 @@ def _asdict_anything(
         return memory[id(val)]
     if getattr(val.__class__, "__attrs_attrs__", None) is not None:
         # Attrs class.
-        try:
-            rv = asdict(
-                val,
-                recurse=True,
-                filter=filter,
-                dict_factory=dict_factory,
-                retain_collection_types=retain_collection_types,
-                value_serializer=value_serializer,
-                memory=memory,
-            )
-        except RecursionError:
-            rv = _Id(id(val))
+        rv = asdict(
+            val,
+            recurse=True,
+            filter=filter,
+            dict_factory=dict_factory,
+            retain_collection_types=retain_collection_types,
+            value_serializer=value_serializer,
+            memory=memory,
+        )
     elif isinstance(val, (tuple, list, set, frozenset)):
         if retain_collection_types is True:
             cf = val.__class__

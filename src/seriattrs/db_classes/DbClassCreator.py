@@ -14,9 +14,11 @@ _ = typing
 class DbClassCreator(ABCMeta):
     """Metaclass that converts Forward references to class instances.
 
+    @define
     class Bar(DbClass):
         foo: "Foo" => Foo
 
+    @define
     class Foo(DbClass):
         bar: "Bar" => Bar
     """
