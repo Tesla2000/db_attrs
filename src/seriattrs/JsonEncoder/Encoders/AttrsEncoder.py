@@ -1,10 +1,8 @@
-import json
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping
 
 from attr import has
 from attr._make import fields
 
-from ..DefaultJsonEncoder import DefaultJsonEncoder
 from ...JsonEncoder import Encoder
 
 
@@ -28,19 +26,19 @@ class AttrsEncoder(Encoder):
 
 def fill_memory_gaps(memory_item, memory, short_term_memory = None):
     if short_term_memory is None:
-        short_term_memory = list()
-    if memory_item in short_term_memory:
+        short_term_memory = set()
+    if id(memory_item) in short_term_memory:
         return
     else:
-        short_term_memory.append(memory_item)
+        short_term_memory.add(id(memory_item))
     if isinstance(memory_item, Mapping):
         for key, value in tuple(memory_item.items()):
             if isinstance(value, _Id):
                 memory_item[key] = memory[memory_item[key]]
             else:
                 fill_memory_gaps(value, memory, short_term_memory)
-    elif isinstance(memory_item, Sequence):
-        for index, item in memory_item:
+    elif isinstance(memory_item, list | set):
+        for index, item in enumerate(memory_item):
             if isinstance(item, _Id):
                 memory_item[index] = memory[item]
             else:

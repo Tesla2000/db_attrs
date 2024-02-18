@@ -1,12 +1,12 @@
 from json import JSONEncoder
-from typing import Mapping, Sequence
+from typing import Mapping
 
 from .Encoder import Encoder
 
 
 class DefaultJsonEncoder(JSONEncoder):
     @classmethod
-    def default(cls, obj, strict: bool=True):
+    def default(cls, obj, strict: bool = True):
         for encoder in Encoder.__subclasses__():
             if encoder.is_valid(obj):
                 return encoder.encode(obj)
@@ -18,21 +18,21 @@ class DefaultJsonEncoder(JSONEncoder):
     @classmethod
     def serialize_values(cls, values, short_term_memory=None):
         if short_term_memory is None:
-            short_term_memory = list()
-        if values in short_term_memory:
-            return values
+            short_term_memory = dict()
+        if id(values) in short_term_memory:
+            return short_term_memory[id(values)]
         else:
-            short_term_memory.append(values)
+            short_term_memory[id(values)] = values
         if isinstance(values, Mapping):
-            for key, value in tuple(values.items()):
-                values[key] = cls.serialize_values(value, short_term_memory)
-            return values
-        elif isinstance(values, Sequence):
-            for index, item in values:
-                values[index] = cls.serialize_values(item, short_term_memory)
-            return values
+            short_term_memory[id(values)] = dict(
+                (key, cls.serialize_values(value, short_term_memory)) for key, value in values.items())
+            return short_term_memory[id(values)]
+        elif isinstance(values, list | set):
+            short_term_memory[id(values)] = list(cls.serialize_values(item, short_term_memory) for item in values)
+            return short_term_memory[id(values)]
         else:
-            return cls._serialize_value(values)
+            short_term_memory[id(values)] = cls._serialize_value(values)
+            return short_term_memory[id(values)]
 
     @classmethod
     def _serialize_value(cls, obj):

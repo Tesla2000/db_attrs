@@ -56,9 +56,11 @@ def test_serialize():
         date: datetime
         decimal: Decimal
         bar: Bar
+        bars: tuple[Bar, Bar]
+        bars_dict: dict[Bar, Bar]
         color: Color
 
-    foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1), Color.RED), Color.RED)
+    foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1), Color.RED), (Bar({}, datetime.now(), Decimal(1), Color.RED), Bar({}, datetime.now(), Decimal(1), Color.RED),), {Bar({}, datetime.now(), Decimal(1), Color.RED): Bar({}, datetime.now(), Decimal(1), Color.RED)}, Color.RED)
     serialized = foo.serialize()
     foo.bar = foo.bar._id
     try:
