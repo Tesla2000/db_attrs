@@ -1,9 +1,10 @@
 import random
-from typing import Any, Self
+from typing import Self
 
-from attr import define, fields, field
+from attr import define, fields
 
 from .DbClassCreator import DbClassCreator
+from .db_fields.ints import int64
 from ..JsonEncoder import Decoder, DefaultJsonEncoder
 from .._db_attrs_converter import _db_attrs_converter
 
@@ -17,7 +18,7 @@ class DbClass(metaclass=DbClassCreator):
 
     :var _id: int64 value provided by default to each instance of a DbClass. Can't be initialized but can be changed after initialization.
     """
-    _id = field(init=False, type=Any, factory=lambda: random.randint(-2 ** 63, 2 ** 63 - 1))
+    _id: int = int64(init=False, factory=lambda: random.randint(-2 ** 63, 2 ** 63 - 1))
 
     def __attrs_post_init__(self):
         if hasattr(self, 'id'):

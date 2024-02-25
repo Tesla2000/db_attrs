@@ -1,3 +1,4 @@
+from collections import ChainMap
 from functools import partial
 
 from attr import field, validators, NOTHING
@@ -59,7 +60,7 @@ def char(
         repr=repr,
         hash=hash,
         init=init,
-        metadata=metadata,
+        metadata=dict(ChainMap({"type": "char"}, metadata)) if metadata is not None else metadata,
         converter=converter,
         factory=factory,
         kw_only=kw_only,
@@ -118,7 +119,7 @@ def varchar(
         repr=repr,
         hash=hash,
         init=init,
-        metadata=metadata,
+        metadata=dict(ChainMap({"type": "varchar"}, metadata)) if metadata is not None else metadata,
         converter=converter,
         factory=factory,
         kw_only=kw_only,
@@ -130,4 +131,4 @@ def varchar(
     )
 
 
-text = partial(field, validator=[validators.instance_of(str)])
+text = partial(field, validator=[validators.instance_of(str)], metadata={"type": "text"})

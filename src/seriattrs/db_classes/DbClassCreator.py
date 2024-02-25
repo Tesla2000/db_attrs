@@ -2,6 +2,7 @@ import re
 import typing
 from abc import ABCMeta
 from collections import defaultdict
+from copy import deepcopy
 from inspect import signature
 from types import GenericAlias
 from typing import Any, get_args, ForwardRef
@@ -26,6 +27,11 @@ class DbClassCreator(ABCMeta):
     _created_types = {}
 
     def __new__(cls, name: str, bases: tuple, namespace: dict[str, Any]):
+        if 'id' in namespace:
+            namespace['_id'] = deepcopy(namespace['id'])
+            namespace['_id'].init = False
+        elif 'id' in namespace.get('__annotations__', tuple()):
+            namespace['__annotations__']['_id'] = namespace['__annotations__']['id']
         new_class = super().__new__(cls, name, bases, namespace)
         for field_name, field_type in new_class.__annotations__.items():
             forward_refs = cls._get_forward_refs(field_type)
