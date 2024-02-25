@@ -14,7 +14,7 @@ class DbClassLiteral(ABC, DbClass):
     Each object of a class is provided with int64 number as an id.
     DbClassLiteral is an abstract class and must be extended in order to create new instances.
 
-    :var _id: int64 value provided by default to each instance of a DbClass. Can't be initialized but can be changed after initialization.
+    :var id: int64 value provided by default to each instance of a DbClass. Can't be initialized but can be changed after initialization.
     """
 
 
@@ -23,15 +23,15 @@ def _handle_new_db(value, db_class_type):
         return value
     if db_class_type.__name__ not in type(db_class_type).temp_instances:
         type(db_class_type).temp_instances[db_class_type.__name__] = {}
-    if value["_id"] in type(db_class_type).temp_instances[db_class_type.__name__]:
-        return type(db_class_type).temp_instances[db_class_type.__name__][value["_id"]]
+    if value["id"] in type(db_class_type).temp_instances[db_class_type.__name__]:
+        return type(db_class_type).temp_instances[db_class_type.__name__][value["id"]]
     else:
         if db_class_type not in type(db_class_type)._created_types.values():
             db_class_type = next(class_ for class_ in type(db_class_type)._created_types.values() if class_.__name__ == db_class_type.__name__)
-        id_value = value.pop("_id")
+        id_value = value.pop("id")
         new_instance = db_class_type(**value)
-        new_instance._id = id_value
-        value["_id"] = id_value
+        new_instance.id = id_value
+        value["id"] = id_value
         type(db_class_type).temp_instances[db_class_type.__name__][id_value] = new_instance
     for f in fields(db_class_type):
         types = list(get_args(f.type))

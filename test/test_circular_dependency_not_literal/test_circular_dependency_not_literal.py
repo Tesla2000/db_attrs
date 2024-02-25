@@ -7,7 +7,7 @@ def test_circular_dependency_not_literal():
 
     serialized_cat = cat.serialize()
     serialized_ala = ala.serialize()
-    cat.ala = ala._id
-    ala.cat = cat._id
+    cat.ala = ala.id
+    ala.cat = cat.id
     assert Cat.deserialize(serialized_cat) == cat
     assert Ala.deserialize(serialized_ala) == ala

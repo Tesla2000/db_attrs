@@ -62,7 +62,7 @@ def test_serialize():
 
     foo = Foo({}, datetime.now(), Decimal(1), Bar({}, datetime.now(), Decimal(1), Color.RED), (Bar({}, datetime.now(), Decimal(1), Color.RED), Bar({}, datetime.now(), Decimal(1), Color.RED),), {Bar({}, datetime.now(), Decimal(1), Color.RED): Bar({}, datetime.now(), Decimal(1), Color.RED)}, Color.RED)
     serialized = foo.serialize()
-    foo.bar = foo.bar._id
+    foo.bar = foo.bar.id
     try:
         json.dump(serialized, sys.stdout)
     except:

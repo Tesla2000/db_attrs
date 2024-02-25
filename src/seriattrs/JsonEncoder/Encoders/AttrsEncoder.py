@@ -21,7 +21,7 @@ class AttrsEncoder(Encoder):
             dictionary = asdict(element, memory=memory)
             fill_memory_gaps(memory, memory)
             return DefaultJsonEncoder.serialize_values(dictionary)
-        return element._id
+        return element.id
 
 
 def fill_memory_gaps(memory_item, memory, short_term_memory = None):

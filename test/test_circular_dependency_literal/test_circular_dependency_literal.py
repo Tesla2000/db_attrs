@@ -9,10 +9,10 @@ def test_circular_dependency_literal():
     serialized_ala = ala.serialize()
     deserialized_cat = Cat.deserialize(serialized_cat)
     deserialized_ala = Ala.deserialize(serialized_ala)
-    assert deserialized_cat._id == cat._id
-    assert deserialized_cat.ala._id == cat.ala._id
-    assert deserialized_cat.ala.cat._id == cat.ala.cat._id
+    assert deserialized_cat.id == cat.id
+    assert deserialized_cat.ala.id == cat.ala.id
+    assert deserialized_cat.ala.cat.id == cat.ala.cat.id
 
-    assert deserialized_ala._id == ala._id
-    assert deserialized_ala.cat._id == ala.cat._id
-    assert deserialized_ala.cat.ala._id == ala.cat.ala._id
+    assert deserialized_ala.id == ala.id
+    assert deserialized_ala.cat.id == ala.cat.id
+    assert deserialized_ala.cat.ala.id == ala.cat.ala.id

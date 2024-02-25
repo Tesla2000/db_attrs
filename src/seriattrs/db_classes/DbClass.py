@@ -1,10 +1,9 @@
 import random
 from typing import Self
 
-from attr import define, fields
+from attr import define, fields, field
 
 from .DbClassCreator import DbClassCreator
-from .db_fields.ints import int64
 from ..JsonEncoder import Decoder, DefaultJsonEncoder
 from .._db_attrs_converter import _db_attrs_converter
 
@@ -13,16 +12,14 @@ from .._db_attrs_converter import _db_attrs_converter
 class DbClass(metaclass=DbClassCreator):
     """Database Class that implements serialize and deserialize methods.
     Each object of a class is provided with int64 number as an id.
-    Whenever field contains a DbClass instance _id field on DbClass is used instead. If an actual class is to be used use DbClassLiteral as a base.
+    Whenever field contains a DbClass instance id field on DbClass is used instead. If an actual class is to be used use DbClassLiteral as a base.
     DbClass is an abstract class and must be extended in order to create new instances.
 
-    :var _id: int64 value provided by default to each instance of a DbClass. Can't be initialized but can be changed after initialization.
+    :var id: int64 value provided by default to each instance of a DbClass. Can't be initialized but can be changed after initialization.
     """
-    _id: int = int64(init=False, factory=lambda: random.randint(-2 ** 63, 2 ** 63 - 1))
+    id: int = field(init=False, factory=lambda: random.randint(-2 ** 63, 2 ** 63 - 1))
 
     def __attrs_post_init__(self):
-        if hasattr(self, 'id'):
-            self._id = self.id
         self._decode()
 
     def serialize(self) -> dict:
@@ -32,7 +29,7 @@ class DbClass(metaclass=DbClassCreator):
             dict(
                 (
                     f.name,
-                    getattr(self, f.name)._id
+                    getattr(self, f.name).id
                     if isinstance(getattr(self, f.name), DbClass)
                        and not isinstance(getattr(self, f.name), DbClassLiteral)
                     else getattr(self, f.name),
