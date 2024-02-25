@@ -28,7 +28,10 @@ def _handle_new_db(value, db_class_type):
     else:
         if db_class_type not in type(db_class_type)._created_types.values():
             db_class_type = next(class_ for class_ in type(db_class_type)._created_types.values() if class_.__name__ == db_class_type.__name__)
-        id_value = value.pop("id")
+        if "id" in db_class_type.__init__.__code__.co_varnames:
+            id_value = value["id"]
+        else:
+            id_value = value.pop("id")
         new_instance = db_class_type(**value)
         new_instance.id = id_value
         value["id"] = id_value
